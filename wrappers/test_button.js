@@ -1,7 +1,14 @@
 const {voting} = require('../core/data')
 const {MessageType} = require('@adiwajshing/baileys')
 module.exports = {wraps: async (f, this_, message, body)=>{
-    const btn_ = message.message.buttonsResponseMessage
+    const btn__ = (message.message.ephemeralMessage?.message||message.message)
+    const btn_ = btn__?btn__.buttonsResponseMessage:false
+    console.log(
+        {
+            btn__:btn__,
+            btn_: btn_
+        }
+    )
     if(btn_){
         const context = btn_.contextInfo
         const id_=btn_.selectedButtonId
@@ -14,11 +21,11 @@ module.exports = {wraps: async (f, this_, message, body)=>{
                 console.log(voting)
                 const s=await voting.addParticipant(id_s, message.participant, text)
                 if(s){
-                    await this_.deleteMessage(message.key.remoteJid, {
-                        id: context.stanzaId,
-                        remoteJid: message.key.remoteJid,
-                        fromMe: true
-                    })
+                    // await this_.deleteMessage(message.key.remoteJid, {
+                    //     id: context.stanzaId,
+                    //     remoteJid: message.key.remoteJid,
+                    //     fromMe: true
+                    // })
                     await this_.sendMessage(message.key.remoteJid, s, MessageType.text, {quoted:message})
                     for(let counter of Object.keys(voting.grouping)){
                         if(voting.grouping[counter].btn.includes(id_s)){
@@ -76,35 +83,35 @@ module.exports = {wraps: async (f, this_, message, body)=>{
                         const _id_ =cmd[3]
                         switch(cmd_){
                             case 'relative':
-                                await this_.deleteMessage(message.key.remoteJid, {
-                                    id: context.stanzaId,
-                                    remoteJid: message.key.remoteJid,
-                                    fromMe: true
-                                })
+                                // await this_.deleteMessage(message.key.remoteJid, {
+                                //     id: context.stanzaId,
+                                //     remoteJid: message.key.remoteJid,
+                                //     fromMe: true
+                                // })
                                 await this_.sendMessage(message.key.remoteJid, await voting.changeMode(_id_,'relative'), MessageType.text)
                                 break
                             case 'fixed':
-                                await this_.deleteMessage(message.key.remoteJid, {
-                                    id: context.stanzaId,
-                                    remoteJid: message.key.remoteJid,
-                                    fromMe: true
-                                })
+                                // await this_.deleteMessage(message.key.remoteJid, {
+                                //     id: context.stanzaId,
+                                //     remoteJid: message.key.remoteJid,
+                                //     fromMe: true
+                                // })
                                 await this_.sendMessage(message.key.remoteJid, await voting.changeMode(_id_,'fixed'), MessageType.text)
                                 break
                             case 'multichoices':
-                                await this_.deleteMessage(message.key.remoteJid, {
-                                    id: context.stanzaId,
-                                    remoteJid: message.key.remoteJid,
-                                    fromMe: true
-                                })
+                                // await this_.deleteMessage(message.key.remoteJid, {
+                                //     id: context.stanzaId,
+                                //     remoteJid: message.key.remoteJid,
+                                //     fromMe: true
+                                // })
                                 await this_.sendMessage(message.key.remoteJid, await voting.changeMode(_id_,'multichoices'), MessageType.text)
                                 break
                             default:
-                                await this_.deleteMessage(message.key.remoteJid, {
-                                    id: context.stanzaId,
-                                    remoteJid: message.key.remoteJid,
-                                    fromMe: true
-                                })
+                                // await this_.deleteMessage(message.key.remoteJid, {
+                                //     id: context.stanzaId,
+                                //     remoteJid: message.key.remoteJid,
+                                //     fromMe: true
+                                // })
                                 const mode= ['relative', 'fixed', 'multichoices']
                                 let _btn__=[]
                                 for(let md of mode){
@@ -123,11 +130,11 @@ module.exports = {wraps: async (f, this_, message, body)=>{
                         }
                         break
                     case 'ui':
-                        await this_.deleteMessage(message.key.remoteJid, {
-                            id: context.stanzaId,
-                            remoteJid: message.key.remoteJid,
-                            fromMe: true
-                        })
+                        // await this_.deleteMessage(message.key.remoteJid, {
+                        //     id: context.stanzaId,
+                        //     remoteJid: message.key.remoteJid,
+                        //     fromMe: true
+                        // })
                         let btn___ = [
                             {buttonId:`vote-mode-${id}-${(new Date()).getTime()}`,buttonText:{displayText:'SET MODE'},type:1},
                             {buttonId:`vote-info-${id}-${(new Date()).getTime()}`,buttonText:{displayText:'INFO'},type:1}
@@ -141,11 +148,11 @@ module.exports = {wraps: async (f, this_, message, body)=>{
                         await this_.sendMessage(message.key.remoteJid, __btnmsg__, MessageType.buttonsMessage)
                         break
                     case 'info':
-                        await this_.deleteMessage(message.key.remoteJid, {
-                            id: context.stanzaId,
-                            remoteJid: message.key.remoteJid,
-                            fromMe: true
-                        })
+                        // await this_.deleteMessage(message.key.remoteJid, {
+                        //     id: context.stanzaId,
+                        //     remoteJid: message.key.remoteJid,
+                        //     fromMe: true
+                        // })
                         if(!voting.grouping[id]) this_.sendMessage(message.key.remoteJid, 'Button Mungkin telah dihapus', MessageType.text, {quoted: message})
                         let btn__ = [
                             {buttonId:`vote-delete-${id}-${(new Date()).getTime()}`,buttonText:{displayText:'Delete'},type:1},

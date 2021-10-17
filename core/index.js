@@ -19,6 +19,7 @@ class BotWhatsApp extends WAConnection{
     }
     async search_command(this_, message, body){
         if(message.message.ButtonsMessage) return  //pengecualian untuk button
+        if(body.constructor() !== '') return ''
         for(let listCommand of library){
             if(this_.prefix===body.toLowerCase().slice(0, this_.prefix.length)&&listCommand.regex.exec(body.toLowerCase().slice(this_.prefix.length))){
                 console.log(body)
@@ -40,6 +41,9 @@ class BotWhatsApp extends WAConnection{
     list_help(){
         return library.map(x=>x.help(this.prefix)).join('\n')
     }
+    async ephemeral(msg){
+        
+    }
     set_(auth){
         auth&&fs.existsSync(auth) && this.loadAuthInfo(auth);
         this.on('open', async()=>{
@@ -50,15 +54,22 @@ class BotWhatsApp extends WAConnection{
         })
         this.on('chat-update', async (chat)=>{
             if(chat.messages){
-                const message = chat.messages.all()[0]
+                let message = chat.messages.all()[0]
                 if(message.key.fromMe){
                     console.log('Dari saya')
                     return
                 }
                 if(message.messages !== null || message.message !== undefined){
                     console.log('pesan masuk')
-                    console.log(message)
-                    let [mess, messagesd] = [message,message.message.ephemeralMessage?message.message.ephemeralMessage:message.message.imageMessage?message.message.imageMessage.caption:message.message.conversation]
+                    //console.log(message.message.ephemeralMessage?message.message.ephemeralMessage.message.extendedTextMessage.text:false)
+                    const eph = message.message?.ephemeralMessage?message.message.ephemeralMessage?.message?message.message.ephemeralMessage.message?.extendedTextMessage?message.message.ephemeralMessage.message.extendedTextMessage.text:false:false:false
+                    if(eph){
+                        console.log({eph: message.message.ephemeralMessage.message.extendedTextMessage})
+                        console.log({eph:eph})
+
+                    }
+                    console.log(message.message)
+                    let [mess, messagesd] = [message,eph.constructor()===''?eph:message.message?.imageMessage?message.message.imageMessage?.caption:message.message.conversation]
                     await wrap.check(this, mess, messagesd, this.search_command)
                 } 
             }

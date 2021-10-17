@@ -17,9 +17,7 @@ module.exports = {
                 btn.push({buttonId:`lstty-${f}`,buttonText:{displayText:pty.pty[f].name},type:1})
             }
         }
-        const media = await this_.prepareMessage(message.key.remoteJid, fs.readFileSync('../media/bash.jpg'), MessageType.image,{
-
-        })
+        //const media = await this_.prepareMessage(message.key.remoteJid, fs.readFileSync('../media/bash.jpg'), MessageType.image)
         if(btn==false){
             await this_.sendMessage(message.key.remoteJid,'Anda Belum mempunyai session', MessageType.text)
             return 
@@ -28,8 +26,7 @@ module.exports = {
             contentText:"LIST SESSION",
             footerText:'@anteicodes',
             buttons:btn,
-            headerType:4,
-            imageMessage: media.message.imageMessage
+            headerType:1
             
         }
         await this_.sendMessage(message.key.remoteJid, btnmsg, MessageType.buttonsMessage)

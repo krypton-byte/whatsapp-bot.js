@@ -6,7 +6,8 @@ const pty = require('../library/pseudo')
 const utils = require('../library/utils')
 module.exports = {
     wraps:async (f, this_, message, body)=>{
-        const btn_ = message.message.buttonsResponseMessage
+        const btn__ = (message.message.ephemeralMessage?.message||message.message)
+        const btn_ = btn__?btn__.buttonsResponseMessage:false
         if(btn_){
             const id = btn_.selectedButtonId
             const idTty = id.split('-')[1]
@@ -17,7 +18,7 @@ module.exports = {
                         await this_.sendMessage(message.key.remoteJid, 'Anda Bukan Author Bot', MessageType.text)
                         return
                     }
-                    const media = await this_.prepareMessage(message.key.remoteJid, fs.readFileSync('../media/bash.jpg'), MessageType.image)
+                    //const media = await this_.prepareMessage(message.key.remoteJid, fs.readFileSync('../media/bash.jpg'), MessageType.image)
                     const btn__ = [
                         {buttonId:`select-${idTty}`,buttonText:{displayText:'SELECT'},type:1},
                         {buttonId:`kill-${idTty}`,buttonText:{displayText:'KILL'},type:1},
@@ -27,8 +28,8 @@ module.exports = {
                         contentText:`${pty.pty[idTty].name} *ACTION*`,
                         footerText:'@anteicodes',
                         buttons:btn__,
-                        headerType:4,
-                        imageMessage: media.message.imageMessage
+                        headerType:1,
+                        //imageMessage: media.message.imageMessage
                     }
                     await this_.sendMessage(message.key.remoteJid, btnmsg, MessageType.buttonsMessage)
                     break
