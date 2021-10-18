@@ -59,7 +59,7 @@ class BotWhatsApp extends WAConnection{
                     console.log('Dari saya')
                     return
                 }
-                if(message.messages !== null || message.message !== undefined){
+                if(message.message !== null || message.message !== undefined){
                     console.log('pesan masuk')
                     //console.log(message.message.ephemeralMessage?message.message.ephemeralMessage.message.extendedTextMessage.text:false)
                     const eph = message.message?.ephemeralMessage?message.message.ephemeralMessage?.message?message.message.ephemeralMessage.message?.extendedTextMessage?message.message.ephemeralMessage.message.extendedTextMessage.text:false:false:false
@@ -69,7 +69,7 @@ class BotWhatsApp extends WAConnection{
 
                     }
                     console.log(message.message)
-                    let [mess, messagesd] = [message,eph.constructor()===''?eph:message.message?.imageMessage?message.message.imageMessage?.caption:message.message.conversation]
+                    let [mess, messagesd] = [message,eph.constructor()==='' ?eph:message.message?.imageMessage?message.message.imageMessage?.caption:message.message.conversation]
                     await wrap.check(this, mess, messagesd, this.search_command)
                 } 
             }
